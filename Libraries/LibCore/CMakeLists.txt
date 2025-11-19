@@ -113,9 +113,22 @@ if (APPLE)
     list(APPEND SOURCES IOSurface.cpp)
 endif()
 
+if (LINUX)
+    list(APPEND SOURCES Notifications/NotificationHandlerLinux.cpp)
+    list(APPEND SOURCES Notifications/NotificationLinuxUtilities.cpp)
+else ()
+    list(APPEND SOURCES Notifications/NotificationHandlerUnimplemented.cpp)
+endif()
+
 ladybird_lib(LibCore core)
 target_link_libraries(LibCore PRIVATE LibUnicode LibURL Threads::Threads)
 target_link_libraries(LibCore PUBLIC LibCoreMinimal)
+
+if (LINUX)
+    find_package(Qt6 REQUIRED COMPONENTS DBus)
+    target_link_libraries(LibCore PRIVATE Qt6::DBus)
+endif()
+
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
     # NetBSD has its shm_open and shm_unlink functions in librt so we need to link that

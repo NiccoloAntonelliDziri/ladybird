@@ -78,7 +78,10 @@ struct ConceptNotification {
     Vector<Action> actions;
 };
 
-// https://notifications.spec.whatwg.org/#notifications
+// https://notifications.spec.whatwg.org/#notification-show-steps
+void notification_show_steps(ConceptNotification const& notification);
+
+// https://notifications.spec.whatwg.org/#notification
 class WEB_API Notification final : public DOM::EventTarget {
     WEB_PLATFORM_OBJECT(Notification, DOM::EventTarget);
     GC_DECLARE_ALLOCATOR(Notification);

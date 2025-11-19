@@ -6,6 +6,7 @@
 
 #include <AK/Math.h>
 #include <AK/Time.h>
+#include <LibCore/Notifications/NotificationHandler.h>
 #include <LibJS/Runtime/Realm.h>
 #include <LibWeb/Bindings/Intrinsics.h>
 #include <LibWeb/Bindings/NotificationPrototype.h>
@@ -197,6 +198,7 @@ WebIDL::ExceptionOr<GC::Ref<Notification>> Notification::construct_impl(
     // then queue a task to fire an event named error on this, and abort these steps.
 
     // FIXME: 2. Run the notification show steps for notification.
+    notification_show_steps(notification);
 
     return this_notification;
 }
@@ -205,6 +207,42 @@ void Notification::initialize(JS::Realm& realm)
 {
     WEB_SET_PROTOTYPE_FOR_INTERFACE(Notification);
     Base::initialize(realm);
+}
+
+void notification_show_steps(ConceptNotification const& notification)
+{
+
+    // 1. Run the fetch steps for notification.
+
+    // 2. Wait for any fetches to complete and notification’s image resource, icon resource, and badge resource to be set (if any), as well as the icon resources for the notification’s actions (if any).
+
+    // 3. Let shown be false.
+    bool shown = false;
+
+    // 4. Let oldNotification be the notification in the list of notifications whose tag is not the empty string and is notification’s tag, and whose origin is same origin with notification’s origin, if any, and null otherwise.
+
+    // 5. If oldNotification is non-null:
+
+    // 1. Handle close events with oldNotification.
+
+    // 2. If the notification platform supports replacement:
+
+    // 1. Replace oldNotification with notification, in the list of notifications.
+
+    // 2. Set shown to true.
+
+    // 3. Otherwise, remove oldNotification from the list of notifications.
+
+    // 6. If shown is false:
+    if (shown == false) {
+        // FIXME: 1. Append notification to the list of notifications.
+
+        // 2. Display notification on the device (e.g., by calling the appropriate notification platform API).
+        Core::NotificationHandler::notify(notification.title);
+    }
+    // 7. If shown is false or oldNotification is non-null, and notification’s renotify preference is true, then run the alert steps for notification.
+
+    // 8. If notification is a non-persistent notification, then queue a task to fire an event named show on the Notification object representing notification.
 }
 
 }
